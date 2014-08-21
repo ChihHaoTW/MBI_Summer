@@ -13,7 +13,7 @@ parse_data = ->
       last_close := file[\close]
       cb!
     else
-      <- fs.appendFile output_file, (if file[\close] >= last_close then \1 else \-1) + "\t", (err) ->
+      <- fs.appendFile output_file, (if file[\close] >= last_close then \1 else \-1) + "\t1:" + ((file[\close]-file[\low])-(file[\high]-file[\close]))/(file[\high]-file[\low]) + "\n", (err) ->
         if err 
           console.log 'The "data to append" was appended to file!'
       last_close := file[\close]
@@ -23,7 +23,7 @@ parse_data = ->
 lineReader.eachLine input_file, (line) ->
   # console.log line
   if /(.+?),(.+?),(.+?),(.+?),(.+?),(.+?),(.+)/ == line
-    orig_data.push {date:that.1, open:that.2, high:that.3, low:that.4, close:that.5, volume:that.6, adj:that.7}
+    orig_data.push {date:parseInt(that.1), open:parseInt(that.2), high:parseInt(that.3), low:parseInt(that.4), close:parseInt(that.5), volume:parseInt(that.6), adj:parseInt(that.7)}
     # console.log orig_data
 .then parse_data
 
